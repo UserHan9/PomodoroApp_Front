@@ -13,20 +13,41 @@ class _LoginScreenState extends State<LoginScreen> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   String error = '';
+  bool isLoading = false;
 
   Future<void> login() async {
-    final success = await ApiService.login(
-      usernameController.text,
-      passwordController.text,
-    );
+    setState(() {
+      isLoading = true;
+      error = '';
+    });
 
-    if (success) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const TimerScreen()),
+    try {
+      final success = await ApiService.login(
+        usernameController.text,
+        passwordController.text,
       );
-    } else {
-      setState(() => error = "Login gagal, cek username/password.");
+
+      if (success) {
+        // Navigasi ke TimerScreen jika login berhasil
+        if (context.mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const TimerScreen()),
+          );
+        }
+      } else {
+        setState(() {
+          error = "Login gagal. Username atau password salah.";
+        });
+      }
+    } catch (e) {
+      setState(() {
+        error = "Terjadi kesalahan saat login: $e";
+      });
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -38,11 +59,28 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(controller: usernameController, decoration: const InputDecoration(labelText: "Username")),
-            TextField(controller: passwordController, obscureText: true, decoration: const InputDecoration(labelText: "Password")),
+            TextField(
+              controller: usernameController,
+              decoration: const InputDecoration(labelText: "Username"),
+            ),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: "Password"),
+            ),
             const SizedBox(height: 20),
-            ElevatedButton(onPressed: login, child: const Text("Login")),
-            if (error.isNotEmpty) Text(error, style: const TextStyle(color: Colors.red)),
+            isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: login,
+                    child: const Text("Login"),
+                  ),
+            const SizedBox(height: 16),
+            if (error.isNotEmpty)
+              Text(
+                error,
+                style: const TextStyle(color: Colors.red),
+              ),
           ],
         ),
       ),
