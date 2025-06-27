@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (success) {
-        // Navigasi ke TimerScreen jika login berhasil
+        //navigation
         if (context.mounted) {
           Navigator.pushReplacement(
             context,
