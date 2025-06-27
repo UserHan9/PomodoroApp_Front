@@ -59,6 +59,16 @@ class _LoginScreenState extends State<LoginScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
+            const Text(
+              "MABAR ANJAY",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
             TextField(
               controller: usernameController,
               decoration: const InputDecoration(labelText: "Username"),
