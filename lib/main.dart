@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Pomodoro App',
-      theme: ThemeData.dark(),
+      theme: ThemeData.light(),
       home: const LoginScreen(),
     );
   }
