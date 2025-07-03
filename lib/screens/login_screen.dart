@@ -51,74 +51,158 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
- @override
+@override
 Widget build(BuildContext context) {
   return Scaffold(
-    appBar: AppBar(title: const Text("Login")),
-    body: Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                "MABAR ANJAY",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 24),
+    backgroundColor: Colors.white,
+    body: Column(
+      children: [
+        const SizedBox(height: 80),
 
-              TextFormField(
-                controller: usernameController,
-                decoration: const InputDecoration(
-                  labelText: "Username",
-                  border: OutlineInputBorder(),
+       const Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: 
+          Text("{TIMER_APP}",style: 
+          TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold
+          ),),
+          ),
+       ),
+
+       const SizedBox(height: 25),
+       const Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: 
+          Text("HALO,SELAMAT DATANG",style: 
+          TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold
+          ),),
+          ),
+       ),
+
+        const SizedBox(height: 5),
+
+       const Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: 
+          Text("LOGIN",style: 
+          TextStyle(
+            fontSize: 35,
+            fontWeight: FontWeight.bold
+          ),),
+          ),
+       ),
+    
+        const SizedBox(height: 20),
+
+        // 🟢 Container form login
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(
+              left: 0,   
+              right: 0,  
+              bottom: 0, 
+            ),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24, 
+              vertical: 32,   
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF0F0F0),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(32),
+                topRight: Radius.circular(32),
+              ),
+             boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 12,
+                  offset: Offset(0, -4),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Username tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24),
-
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: login,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(48)
+              ],
+            ),
+            child: SingleChildScrollView(
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Username", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        labelText: "Username/Gmail",
+                        border: OutlineInputBorder(),
                       ),
-                      child: const Text("Login"),
+                      validator: (value) =>
+                          (value == null || value.isEmpty) ? 'Username tidak boleh kosong' : null,
                     ),
-              const SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
-              if (error.isNotEmpty)
-                Text(
-                  error,
-                  style: const TextStyle(color: Colors.red),
+                    const Text("Password", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 5),
+                    TextFormField(
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: "Password",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) =>
+                          (value == null || value.isEmpty) ? 'Password tidak boleh kosong' : null,
+                    ),
+                    const SizedBox(height: 24),
+
+                    isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: login,
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(48),
+                              ),
+                              child: const Text("Login"),
+                            ),
+                          ),
+                    const SizedBox(height: 16),
+
+                    if (error.isNotEmpty)
+                      Text(
+                        error,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+
+                    const SizedBox(height: 20),
+                    const Row(
+                      children: [
+                        Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Text(
+                            "LOGIN DENGAN",
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                        ),
+                        Expanded(child: Divider(thickness: 1, color: Colors.grey)),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                  ],
                 ),
-            ],
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     ),
   );
 }
