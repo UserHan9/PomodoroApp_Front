@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       setState(() {
-        error = "Terjadi kesalahan saat login: $e";
+        error = "Terjadi kesalahan saat login.";
       });
     } finally {
       setState(() {

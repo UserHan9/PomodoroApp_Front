@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
+import '../services/api_motivasi.dart';
+import 'login_screen.dart';
 
 class TimerScreen extends StatefulWidget {
   const TimerScreen({super.key});
@@ -13,6 +16,29 @@ class _TimerScreenState extends State<TimerScreen> {
   int _seconds = 25 * 60;
   Timer? _timer;
   late DateTime _startTime;
+  String username = "";
+  String motivasi = "";
+
+  @override
+  void initState() {
+    super.initState();
+    loadUsername();
+    fetchMotivasi();
+  }
+
+  Future<void> loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username') ?? "";
+    });
+  }
+
+  Future<void> fetchMotivasi() async {
+    final result = await ApiMotivasi.getMotivasi(); // Sesuaikan jika kamu pakai list
+    setState(() {
+      motivasi = result;
+    });
+  }
 
   void startTimer() {
     _startTime = DateTime.now();
@@ -38,10 +64,20 @@ class _TimerScreenState extends State<TimerScreen> {
       end: endTime,
       success: success,
     );
-    if (posted) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Pomodoro data terkirim!")));
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Gagal kirim data.")));
+    if (posted && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Pomodoro berhasil dikirim")),
+      );
+    }
+  }
+
+  void logout() async {
+    await ApiService.logout();
+    if (context.mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
     }
   }
 
@@ -51,13 +87,78 @@ class _TimerScreenState extends State<TimerScreen> {
     final seconds = (_seconds % 60).toString().padLeft(2, '0');
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Pomodoro Timer")),
+      appBar: AppBar(
+        title: const Text("Pomodoro Timer"),
+        actions: [
+          IconButton(
+            onPressed: logout,
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 16),
+
+            // Banner Username
+            if (username.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.amber[100],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    "Hai, $username! Tetap semangat 🍅",
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ),
+
+            const SizedBox(height: 10),
+
+            // Banner Motivasi
+            // Banner Motivasi
+            if (motivasi.isNotEmpty)
+              Container(
+                width: 300,
+                height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    motivasi,
+                    style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+
+
+            const SizedBox(height: 40),
+
+            // Timer Display
             Text("$minutes:$seconds", style: const TextStyle(fontSize: 48)),
             const SizedBox(height: 20),
+
             ElevatedButton(onPressed: startTimer, child: const Text("Start")),
             ElevatedButton(onPressed: stopTimer, child: const Text("Stop")),
           ],
