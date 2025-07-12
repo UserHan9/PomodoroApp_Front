@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import '../services/api_motivasi.dart';
+import '../services/model/models_motivasi.dart';
 import 'login_screen.dart';
 
 class TimerScreen extends StatefulWidget {
@@ -15,9 +16,12 @@ class TimerScreen extends StatefulWidget {
 class _TimerScreenState extends State<TimerScreen> {
   int _seconds = 25 * 60;
   Timer? _timer;
+  Timer? _motivasiTimer;
   late DateTime _startTime;
+
   String username = "";
-  String motivasi = "";
+  List<Motivasi> motivasiList = [];
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -34,10 +38,19 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   Future<void> fetchMotivasi() async {
-    final result = await ApiMotivasi.getMotivasi(); // Sesuaikan jika kamu pakai list
-    setState(() {
-      motivasi = result;
-    });
+    final result = await ApiMotivasi.getMotivasi();
+    if (result.isNotEmpty) {
+      setState(() {
+        motivasiList = result;
+        currentIndex = 0;
+      });
+
+      _motivasiTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+        setState(() {
+          currentIndex = (currentIndex + 1) % motivasiList.length;
+        });
+      });
+    }
   }
 
   void startTimer() {
@@ -82,6 +95,13 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   @override
+  void dispose() {
+    _timer?.cancel();
+    _motivasiTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final minutes = (_seconds ~/ 60).toString().padLeft(2, '0');
     final seconds = (_seconds % 60).toString().padLeft(2, '0');
@@ -103,32 +123,29 @@ class _TimerScreenState extends State<TimerScreen> {
           children: [
             const SizedBox(height: 16),
 
-            // Banner Username
-            if (username.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.amber[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    "Hai, $username! Tetap semangat 🍅",
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+            // if (username.isNotEmpty)
+            //   Padding(
+            //     padding: const EdgeInsets.symmetric(horizontal: 16),
+            //     child: Container(
+            //       width: double.infinity,
+            //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            //       decoration: BoxDecoration(
+            //         color: Colors.amber[100],
+            //         borderRadius: BorderRadius.circular(12),
+            //       ),
+            //       child: Text(
+            //         "Hai, $username! Tetap semangat 🍅",
+            //         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            //       ),
+            //     ),
+            //   ),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 16),
 
-            // Banner Motivasi
-            // Banner Motivasi
-            if (motivasi.isNotEmpty)
+            if (motivasiList.isNotEmpty)
               Container(
-                width: 300,
-                height: 60,
+                width: 400,
+                height: 100,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
@@ -141,21 +158,26 @@ class _TimerScreenState extends State<TimerScreen> {
                     ),
                   ],
                 ),
-                child: Center(
-                  child: Text(
-                    motivasi,
-                    style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                        motivasiList[currentIndex].teks,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                    )
+                  ],
                 ),
+                 
               ),
-
 
             const SizedBox(height: 40),
 
-            // Timer Display
             Text("$minutes:$seconds", style: const TextStyle(fontSize: 48)),
             const SizedBox(height: 20),
 
