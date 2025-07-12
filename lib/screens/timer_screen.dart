@@ -117,6 +117,7 @@ class _TimerScreenState extends State<TimerScreen> {
           ),
         ],
       ),
+      
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -144,9 +145,9 @@ class _TimerScreenState extends State<TimerScreen> {
 
             if (motivasiList.isNotEmpty)
               Container(
-                width: 400,
+                width: 500,
                 height: 100,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 decoration: BoxDecoration(
                   color: Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(12),
@@ -164,11 +165,22 @@ class _TimerScreenState extends State<TimerScreen> {
                     Text(
                         motivasiList[currentIndex].teks,
                         style: const TextStyle(
-                          fontSize: 14,
+                          fontSize: 16,
                           fontStyle: FontStyle.italic,
                         ),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
+                        textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10,),
+                    Text(
+                        motivasiList[currentIndex].pembuat,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                         textAlign: TextAlign.center,
                     )
                   ],
