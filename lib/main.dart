@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
-import 'screens/timer_screen.dart';
+import 'screens/home_screen.dart';
 import 'services/api_service.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
           }
 
           if (snapshot.data == true) {
-            return const TimerScreen();
+            return const HomeScreen();
           } else {
             return const LoginScreen();
           }

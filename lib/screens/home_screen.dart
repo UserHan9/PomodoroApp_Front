@@ -9,10 +9,10 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(title: const Text("Home")),
       body: const Center(child: Text("Welcome to Home Screen")),
 
-      // Floating Action Button (tombol plus bulet)
+      
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Aksi saat tombol plus ditekan
+          // TODO add timer logic
         },
         child: const Icon(Icons.add),
         shape: const CircleBorder(),
@@ -31,14 +31,14 @@ class HomeScreen extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.home),
                 onPressed: () {
-                  // Aksi tombol Home
+                  //TODO add home logic
                 },
               ),
               const SizedBox(width: 40), // Spacer untuk FAB
               IconButton(
                 icon: const Icon(Icons.history),
                 onPressed: () {
-                  // Aksi tombol History
+                  // TODO add history logic
                 },
               ),
             ],
