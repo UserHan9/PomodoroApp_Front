@@ -112,7 +112,7 @@ Widget build(BuildContext context) {
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.amber[100],
+                color: Color(0xFFF0F0F0),
                 borderRadius: BorderRadius.circular(16),
               ),
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 10),
