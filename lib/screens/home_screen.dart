@@ -99,67 +99,87 @@ class _HomeScreenState extends State<HomeScreen> {
     return '$hours:$minutes:$seconds';
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Home")),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (username.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.amber[100],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    "Hai, $username! Tetap semangat 🍅",
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
+ @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: const Text("Home")),
+    body: Column(
+      children: [
+        const SizedBox(height: 20),
+        if (username.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16,),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.amber[100],
+                borderRadius: BorderRadius.circular(16),
               ),
-            const SizedBox(height: 24),
-            const Text("Selected Duration:", style: TextStyle(fontSize: 18)),
-            const SizedBox(height: 8),
-            Text(formatDuration(selectedDuration),
-                style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 10),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "SELAMAT DATANG, $username",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8), // Jarak antar teks
+                    const Text(
+                      "Semangat Belajarnya Untuk Hari Ini.",
+                      style: TextStyle(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              )
+            ),
+          ),
+
+        const SizedBox(height: 40),
+        const Text("Selected Duration:", style: TextStyle(fontSize: 18)),
+        const SizedBox(height: 8),
+        Text(
+          formatDuration(selectedDuration),
+          style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+        ),
+      ],
+    ),
+
+    
+    floatingActionButton: FloatingActionButton(
+      onPressed: () => _showTimerForm(context),
+      child: const Icon(Icons.add),
+      shape: const CircleBorder(),
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+    bottomNavigationBar: BottomAppBar(
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 6.0,
+      child: SizedBox(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {},
+            ),
+            const SizedBox(width: 40),
+            IconButton(
+              icon: const Icon(Icons.history),
+              onPressed: () {},
+            ),
           ],
         ),
       ),
+    ),
+  );
+}
 
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showTimerForm(context),
-        child: const Icon(Icons.add),
-        shape: const CircleBorder(),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 6.0,
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.home),
-                onPressed: () {},
-              ),
-              const SizedBox(width: 40),
-              IconButton(
-                icon: const Icon(Icons.history),
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
