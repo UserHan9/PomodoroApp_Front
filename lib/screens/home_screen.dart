@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +28,34 @@ class _HomeScreenState extends State<HomeScreen> {
       username = prefs.getString('username') ?? "";
     });
   }
+
+  Future<void> saveDurationToBackend(Duration duration) async {
+  final prefs = await SharedPreferences.getInstance();
+  final token = prefs.getString('accessToken');
+
+  if (token == null) {
+    print("No token found.");
+    return;
+  }
+
+  final url = Uri.parse("http://localhost:8000/api/time-entry/");
+  final durationInSeconds = duration.inSeconds;
+
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+    body: json.encode({'duration': durationInSeconds}),
+  );
+
+  if (response.statusCode == 201) {
+    print("Duration saved successfully.");
+  } else {
+    print("Failed to save duration: ${response.body}");
+  }
+}
 
   void _showTimerForm(BuildContext context) {
     Duration tempDuration = selectedDuration;
@@ -77,10 +107,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Done button
               CupertinoButton.filled(
-                onPressed: () {
+                onPressed: () async {
                   setState(() {
-                    selectedDuration = tempDuration;
-                  });
+                     selectedDuration = tempDuration;
+                    });
+                      await saveDurationToBackend(selectedDuration);
                   Navigator.pop(context);
                 },
                 child: const Text('Done'),
