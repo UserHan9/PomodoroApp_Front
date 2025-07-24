@@ -30,14 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> saveDurationToBackend(Duration duration) async {
-  final prefs = await SharedPreferences.getInstance();
-  final token = prefs.getString('accessToken');
-
-  if (token == null) {
-    print("No token found.");
-    return;
-  }
-
   final url = Uri.parse("http://localhost:8000/api/time-entry/");
   final durationInSeconds = duration.inSeconds;
 
@@ -45,7 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     url,
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer $token',
     },
     body: json.encode({'duration': durationInSeconds}),
   );
@@ -56,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Failed to save duration: ${response.body}");
   }
 }
+
 
   void _showTimerForm(BuildContext context) {
     Duration tempDuration = selectedDuration;
@@ -161,7 +153,7 @@ Widget build(BuildContext context) {
                     ),
                     const SizedBox(height: 8), // Jarak antar teks
                     const Text(
-                      "Semangat Belajarnya Untuk Hari Ini.",
+                      "Semangat Untuk Hari Ini.",
                       style: TextStyle(fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
