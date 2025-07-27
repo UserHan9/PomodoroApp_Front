@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../services/api_service.dart';
-// import 'timer_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,40 +13,36 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  String error = '';
-  bool isLoading = false;
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  String error = "";
 
   Future<void> login() async {
-    setState(() {
-      isLoading = true;
-      error = '';
-    });
+    final url = Uri.parse("http://localhost:8000/api/token/");
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': usernameController.text,
+        'password': passwordController.text,
+      }),
+    );
 
-    try {
-      final success = await ApiService.login(
-        usernameController.text,
-        passwordController.text,
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final prefs = await SharedPreferences.getInstance();
+
+      await prefs.setString('access_token', data['access']);
+      await prefs.setString('refresh_token', data['refresh']);
+      await prefs.setString('username', usernameController.text);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
       );
-
-      if (success && context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const HomeScreen()),
-        );
-      } else {
-        setState(() {
-          error = "Login gagal. Username atau password salah.";
-        });
-      }
-    } catch (e) {
+    } else {
       setState(() {
-        error = "Terjadi kesalahan saat login.";
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
+        error = "Login gagal. Username atau password salah.";
       });
     }
   }
@@ -146,18 +143,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 24),
-                                isLoading
-                                    ? const Center(child: CircularProgressIndicator())
-                                    : SizedBox(
-                                        width: double.infinity,
-                                        child: ElevatedButton(
-                                          onPressed: login,
-                                          style: ElevatedButton.styleFrom(
-                                            minimumSize: const Size.fromHeight(48),
-                                          ),
-                                          child: const Text("Login"),
-                                        ),
-                                      ),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: login,
+                                    style: ElevatedButton.styleFrom(
+                                      minimumSize: const Size.fromHeight(48),
+                                    ),
+                                    child: const Text("Login"),
+                                  ),
+                                ),
                                 const SizedBox(height: 16),
                                 if (error.isNotEmpty)
                                   Text(
@@ -167,27 +162,23 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const SizedBox(height: 20),
                                 const Row(
                                   children: [
-                                    Expanded(
-                                        child: Divider(thickness: 1, color: Colors.grey)),
+                                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
                                     Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 12),
+                                      padding: EdgeInsets.symmetric(horizontal: 12),
                                       child: Text(
                                         "LOGIN DENGAN",
                                         style: TextStyle(color: Colors.black54),
                                       ),
                                     ),
-                                    Expanded(
-                                        child: Divider(thickness: 1, color: Colors.grey)),
+                                    Expanded(child: Divider(thickness: 1, color: Colors.grey)),
                                   ],
                                 ),
                                 const SizedBox(height: 20),
-
-                               Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     SizedBox(
-                                      width: 150, // Atur lebar tombol
+                                      width: 150,
                                       child: ElevatedButton.icon(
                                         onPressed: () {
                                           // TODO: Login Google

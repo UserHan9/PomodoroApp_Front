@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -30,23 +31,38 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> saveDurationToBackend(Duration duration) async {
-  final url = Uri.parse("http://localhost:8000/api/time-entry/");
-  final durationInSeconds = duration.inSeconds;
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('access_token');
 
-  final response = await http.post(
-    url,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: json.encode({'duration': durationInSeconds}),
-  );
+    if (token == null) {
+      print("Token tidak ditemukan. Login terlebih dahulu.");
+      return;
+    }
 
-  if (response.statusCode == 201) {
-    print("Duration saved successfully.");
-  } else {
-    print("Failed to save duration: ${response.body}");
+    final url = Uri.parse("http://localhost:8000/api/time-entry/");
+    final durationInSeconds = duration.inSeconds;
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: json.encode({'duration': durationInSeconds}),
+    );
+
+    if (response.statusCode == 201) {
+      print("Durasi berhasil disimpan.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Durasi berhasil dikirim!")),
+      );
+    } else {
+      print("Gagal menyimpan durasi: ${response.body}");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gagal: ${response.body}")),
+      );
+    }
   }
-}
 
 
   void _showTimerForm(BuildContext context) {
