@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../services/model/timeentry_model.dart';
+import '../screens/timer_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -254,7 +255,15 @@ class _HomeScreenState extends State<HomeScreen> {
             children: <Widget>[
               IconButton(icon: const Icon(Icons.home), onPressed: () {}),
               const SizedBox(width: 40),
-              IconButton(icon: const Icon(Icons.history), onPressed: () {}),
+              IconButton(
+                  icon: const Icon(Icons.history),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const TimerScreen()),
+                    );
+                  },
+                ),
             ],
           ),
         ),
