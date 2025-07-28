@@ -124,23 +124,6 @@ class _TimerScreenState extends State<TimerScreen> {
           children: [
             const SizedBox(height: 16),
 
-            // if (username.isNotEmpty)
-            //   Padding(
-            //     padding: const EdgeInsets.symmetric(horizontal: 16),
-            //     child: Container(
-            //       width: double.infinity,
-            //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            //       decoration: BoxDecoration(
-            //         color: Colors.amber[100],
-            //         borderRadius: BorderRadius.circular(12),
-            //       ),
-            //       child: Text(
-            //         "Hai, $username! Tetap semangat 🍅",
-            //         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            //       ),
-            //     ),
-            //   ),
-
             const SizedBox(height: 16),
 
             if (motivasiList.isNotEmpty)

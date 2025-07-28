@@ -3,10 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "http://127.0.0.1:8000"; // Ganti jika kamu deploy
+  static const String baseUrl = "http://127.0.0.1:8000"; // Ganti jika deploy
 
   // ============================
-  // 🔐 LOGIN
+  // LOGIN
   // ============================
   static Future<bool> login(String username, String password) async {
     final url = Uri.parse("$baseUrl/api/token/");
@@ -27,13 +27,13 @@ class ApiService {
       await prefs.setString('username', username);
       return true;
     } else {
-      print("❌ Login gagal: ${response.body}");
+      print("Login gagal: ${response.body}");
       return false;
     }
   }
 
   // ============================
-  // 🔐 TOKEN HANDLING
+  // TOKEN HANDLING
   // ============================
   static Future<String?> getAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -57,7 +57,7 @@ class ApiService {
   }
 
   // ============================
-  // ♻️ REFRESH TOKEN
+  // REFRESH TOKEN
   // ============================
   static Future<bool> refreshAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -87,7 +87,7 @@ class ApiService {
   }
 
   // ============================
-  // ⏱️ POST POMODORO SESSION
+  // POST POMODORO SESSION
   // ============================
   static Future<bool> postPomodoroSession({
     required DateTime start,
@@ -112,14 +112,14 @@ class ApiService {
 
     final token = await getAccessToken();
     if (token == null) {
-      print("⛔ Token tidak tersedia. Harap login ulang.");
+      print("Token tidak tersedia. Harap login ulang.");
       return false;
     }
 
     var response = await _makeRequest(token);
 
     if (response.statusCode == 401) {
-      print("⚠️ Token expired. Mencoba refresh...");
+      print("Token expired. Mencoba refresh...");
 
       final refreshed = await refreshAccessToken();
       if (!refreshed) return false;
@@ -131,12 +131,49 @@ class ApiService {
     }
 
     if (response.statusCode == 201) {
-      print("✅ Pomodoro session berhasil dikirim.");
+      print("Pomodoro session berhasil dikirim.");
       return true;
     } else {
-      print("❌ Gagal kirim Pomodoro session: ${response.statusCode}");
+      print("Gagal kirim Pomodoro session: ${response.statusCode}");
       print("Response body: ${response.body}");
       return false;
     }
   }
+}
+
+ // ============================
+  // TIME ENTRY
+  // ============================
+
+ class TimeEntry {
+  final int duration;
+  final String relativeCreatedAt;
+
+  TimeEntry({required this.duration, required this.relativeCreatedAt});
+
+  factory TimeEntry.fromJson(Map<String, dynamic> json) {
+    return TimeEntry(
+      duration: json['duration'],
+      relativeCreatedAt: json['relative_created_at'],
+    );
+  }
+}
+
+Future<TimeEntry?> fetchLatestTimeEntry() async {
+  final response = await http.get(
+    Uri.parse('http://127.0.0.1:8000/api/time-entry/'),
+    headers: {
+      'Authorization': 'Bearer your_token_here',
+      'Content-Type': 'application/json',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final List data = json.decode(response.body);
+    if (data.isNotEmpty) {
+      return TimeEntry.fromJson(data.last); 
+    }
+  }
+
+  return null;
 }
