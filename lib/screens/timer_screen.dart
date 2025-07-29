@@ -50,6 +50,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
   Future<void> fetchMotivasi() async {
     final result = await ApiMotivasi.getMotivasi();
+    print("Jumlah motivasi dari API: ${result.length}");
     if (result.isNotEmpty) {
       setState(() {
         motivasiList = result;

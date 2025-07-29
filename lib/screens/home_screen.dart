@@ -211,37 +211,53 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 40),
         const Text("Latest Durations:", style: TextStyle(fontSize: 18)),
         const SizedBox(height: 8),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Wrap(
-            spacing: 12,
-            runSpacing: 12,
-            children: durations.map((entry) {
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      formatDuration(entry.duration),
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+
+
+         Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              children: durations.map((entry) {
+                return GestureDetector(
+                  onTap: () {
+                   Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TimerScreen(
+                          durationInSeconds: entry.duration.inSeconds, // ubah ke detik
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade100,
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      entry.relativeCreatedAt,
-                      style: const TextStyle(fontSize: 13, color: Colors.black54),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          formatDuration(entry.duration),
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          entry.relativeCreatedAt,
+                          style: const TextStyle(fontSize: 13, color: Colors.black54),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              );
-            }).toList(),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
-        ),
+
+
         const SizedBox(height: 80),
           ],
         ),
