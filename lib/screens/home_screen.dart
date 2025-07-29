@@ -144,12 +144,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 10),
               CupertinoButton.filled(
-                onPressed: () async {
-                  await saveDurationToBackend(tempDuration);
-                  Navigator.pop(context);
-                },
-                child: const Text('Done'),
-              ),
+                  onPressed: () async {
+                    await saveDurationToBackend(tempDuration);
+                    if (!mounted) return;
+                    Navigator.pop(context); // Tutup bottom sheet
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TimerScreen(durationInSeconds: tempDuration.inSeconds),
+                      ),
+                    );
+                  },
+                  child: const Text('Done'),
+                ),
             ],
           ),
         ),
@@ -260,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const TimerScreen()),
+                      MaterialPageRoute(builder: (context) => TimerScreen(durationInSeconds: 1500))
                     );
                   },
                 ),

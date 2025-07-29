@@ -7,17 +7,27 @@ import '../services/model/models_motivasi.dart';
 import 'login_screen.dart';
 
 class TimerScreen extends StatefulWidget {
-  const TimerScreen({super.key});
+  final int durationInSeconds;
+
+  const TimerScreen({super.key, required this.durationInSeconds});
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
 }
+
 
 class _TimerScreenState extends State<TimerScreen> {
   int _seconds = 25 * 60;
   Timer? _timer;
   Timer? _motivasiTimer;
   late DateTime _startTime;
+
+  String formatToHHMMSS(int totalSeconds) {
+    final hours = (totalSeconds ~/ 3600).toString().padLeft(2, '0');
+    final minutes = ((totalSeconds % 3600) ~/ 60).toString().padLeft(2, '0');
+    final seconds = (totalSeconds % 60).toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
+  }
 
   String username = "";
   List<Motivasi> motivasiList = [];
@@ -26,6 +36,7 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   void initState() {
     super.initState();
+    _seconds = widget.durationInSeconds;
     loadUsername();
     fetchMotivasi();
   }
@@ -102,85 +113,77 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final minutes = (_seconds ~/ 60).toString().padLeft(2, '0');
-    final seconds = (_seconds % 60).toString().padLeft(2, '0');
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pomodoro Timer"),
-        actions: [
-          IconButton(
-            onPressed: logout,
-            icon: const Icon(Icons.logout),
-            tooltip: 'Logout',
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text("Pomodoro Timer"),
+      actions: [
+        IconButton(
+          onPressed: logout,
+          icon: const Icon(Icons.logout),
+          tooltip: 'Logout',
+        ),
+      ],
+    ),
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          if (motivasiList.isNotEmpty)
+            Container(
+              width: 500,
+              height: 100,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    motivasiList[currentIndex].teks,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    motivasiList[currentIndex].pembuat,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                  )
+                ],
+              ),
+            ),
+          const SizedBox(height: 40),
+          Text(
+            formatToHHMMSS(_seconds),
+            style: const TextStyle(fontSize: 48),
           ),
+          const SizedBox(height: 20),
+          ElevatedButton(onPressed: startTimer, child: const Text("Start")),
+          ElevatedButton(onPressed: stopTimer, child: const Text("Stop")),
         ],
       ),
-      
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-
-            const SizedBox(height: 16),
-
-            if (motivasiList.isNotEmpty)
-              Container(
-                width: 500,
-                height: 100,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        motivasiList[currentIndex].teks,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10,),
-                    Text(
-                        motivasiList[currentIndex].pembuat,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-                 
-              ),
-
-            const SizedBox(height: 40),
-
-            Text("$minutes:$seconds", style: const TextStyle(fontSize: 48)),
-            const SizedBox(height: 20),
-
-            ElevatedButton(onPressed: startTimer, child: const Text("Start")),
-            ElevatedButton(onPressed: stopTimer, child: const Text("Stop")),
-          ],
-        ),
-      ),
-    );
-  }
+    ),
+  );
+}
 }
