@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../services/model/models_motivasi.dart'; // ✅ Lokasi yang kamu pakai
 
-
 class ApiMotivasi {
   static const String baseUrl = "http://127.0.0.1:8000";
 
@@ -11,12 +10,19 @@ class ApiMotivasi {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data is List) {
-        return data.map((json) => Motivasi.fromJson(json)).toList();
+      final results = data['results']; 
+
+      if (results is List) {
+        print("✅ Jumlah motivasi dari API: ${results.length}");
+        return results.map((json) => Motivasi.fromJson(json)).toList();
+      } else {
+        print("⚠️ 'results' bukan list: $results");
       }
+    } else {
+      print("❌ Gagal fetch motivasi: ${response.statusCode}");
     }
 
-    // Jika gagal atau kosong
     return [];
   }
 }
+
