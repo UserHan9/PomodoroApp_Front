@@ -179,9 +179,29 @@ Widget build(BuildContext context) {
             formatToHHMMSS(_seconds),
             style: const TextStyle(fontSize: 48),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(onPressed: startTimer, child: const Text("Start")),
-          ElevatedButton(onPressed: stopTimer, child: const Text("Stop")),
+         const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0), 
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: 300, 
+                  child: ElevatedButton(
+                    onPressed: startTimer,
+                    child: const Text("Start"),
+                  ),
+                ),
+                SizedBox(
+                  width: 300, 
+                  child: ElevatedButton(
+                    onPressed: stopTimer,
+                    child: const Text("Stop"),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     ),
