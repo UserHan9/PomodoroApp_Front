@@ -5,8 +5,8 @@
 <h3>Done, This project is just to fill my spare time.</h3>
 
 <p>
-frontend: git clone https://github.com/UserHan9/PomodoroApp_Front.git
-backend: git clone https://github.com/UserHan9/PomodoroApp_Backend.git
+<p>frontend: git clone https://github.com/UserHan9/PomodoroApp_Front.git</p>
+<p>backend: git clone https://github.com/UserHan9/PomodoroApp_Backend.git</p>
 ======================================================================
 
 cd flutter-frontend
