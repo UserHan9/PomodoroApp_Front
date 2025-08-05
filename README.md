@@ -4,7 +4,11 @@
 
 <h3>Done, This project is just to fill my spare time.</h3>
 
-<p>git clone https://github.com/UserHan9/PomodoroApp_Front.git
+<p>
+frontend: git clone https://github.com/UserHan9/PomodoroApp_Front.git
+backend: git clone https://github.com/UserHan9/PomodoroApp_Backend.git
+======================================================================
+
 cd flutter-frontend
 
 # Install packages
