@@ -4,7 +4,7 @@
 
 <h3>Done, This project is just to fill my spare time.</h3>
 
-<p>git clone https://github.com/UserHan9/flutter-frontend.git
+<p>git clone https://github.com/UserHan9/PomodoroApp_Front.git
 cd flutter-frontend
 
 # Install packages
