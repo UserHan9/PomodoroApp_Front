@@ -1,15 +1,15 @@
 # front_pomodoro
 
-<p>FLUTTER FRONTEND FOR PomodoroApp_Backend</p>
+<p>DJANGO REST FRAMEWORK AND FLUTTER </p>
 
-<h3>Done, This project is just to fill my spare time.</h3>
+<h2>Done, This project is just to fill my spare time and learning.</h2>
 
 <p>
 <p>frontend: git clone https://github.com/UserHan9/PomodoroApp_Front.git</p>
 <p>backend: git clone https://github.com/UserHan9/PomodoroApp_Backend.git</p>
 ======================================================================
 
-cd flutter-frontend
+cd PomodoroApp_Front
 
 # Install packages
 flutter pub get
